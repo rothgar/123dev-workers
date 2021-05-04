@@ -1,0 +1,7 @@
+name = "123dev-redirect"
+type = "javascript"
+
+account_id = "0f8fe574f3489eda5a599104efd24d26"
+workers_dev = true
+route = "preview.123dev.email/posts/*"
+zone_id = "76067dff28ad7e238b909520e06a2ef8"
