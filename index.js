@@ -8,10 +8,17 @@ async function handleRequest(request) {
   let auto_play = searchParams.get('auto_play')
 
   if (auto_play) {
-    // replace 123dev.email/posts/1 with 123dev.email/embed/posts/1
-    var re = /embed/gi
-    console.log(`returning ${url}`)
-    return fetch(url.replace(re, "embed/posts"));
+    if (request.url.includes("posts") && !request.url.includes("embed")) {
+      // replace 123dev.email/posts/1 with 123dev.email/embed/posts/1
+      var re = /posts/gi
+      console.log(`returning ${url}`)
+      return fetch(url.replace(re, "embed/posts"));
+    } else if (request.url.includes("embed") && !request.url.includes("posts")) {
+      // replace 123dev.email/embed/1 with 123dev.email/embed/posts/1
+      var re = /embed/gi
+      console.log(`returning ${url}`)
+      return fetch(url.replace(re, "embed/posts"));
+    }
   }
 
   // redirect twitterbot
@@ -29,10 +36,15 @@ async function handleRequest(request) {
   }
   if (request.url.includes("embed")) {
     if (!userAgent.includes("Twitterbot")) {
-      //replace 123dev.email/embed/posts/1 with 123dev.email//posts/1
       var re = /embed/gi
       console.log(`Redirecting user to ${url.replace(re, "")}`)
-      return Response.redirect(url.replace(re, ""), statusCode)
+      if (!request.url.includes("posts")) {
+        //replace 123dev.email/embed/1 with 123dev.email/posts/1
+        return Response.redirect(url.replace(re, "posts"), statusCode)
+      } else {
+        //replace 123dev.email/embed/posts/1 with 123dev.email//posts/1
+        return Response.redirect(url.replace(re, ""), statusCode)
+      }
     }
   }
   console.log(`returning ${url}`)
